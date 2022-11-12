@@ -6,16 +6,26 @@ EMPTY = 0
 class player:
     l_move = []
     ex_box = []
-    inv={}
+    inv = {(1, 0): (-1, 0), (0, 1): (0, -1), (-1, 0): (1, 0), (0, -1): (0, 1), 2: 1, 1: 2}
     def _init_(self):
-        self.step=0
-        self.l_move = []
-        self.ex_box = []
-        self.inv={(1,0):(-1,0),(0,1):(0,-1),(-1,0):(1,0),(0,-1):(0,1),2:1,1:2}
+        pass
+
+    def move(self, B, N, cur_x, cur_y):
+
+        if len(self.l_move) == 0:
+            return self.findmove(B, N, cur_x, cur_y)
+        else:
+            move = self.l_move.pop(0)
+            if (self.completed(B, N, cur_x, cur_y)):
+                self.l_move.clear()
+
+            elif (self.blockage(B, N, cur_x, cur_y)):
+                self.l_move.clear()
+                return self.findmove(B, N, cur_x, cur_y)
+            return move
     def completed(self, B, N, cur_x, cur_y):
         done=True
         myVal=B[self.ex_box[0][0]][self.ex_box[0][1]]
-        opVal=self.inv[myVal]
         for i in self.ex_box:
             if B[i[0]][i[1]] != myVal:
                 done=False
@@ -30,31 +40,18 @@ class player:
                 interrupt=True
         return interrupt
 
-    def move(self,B,N,cur_x,cur_y):
-        self.step+=1
-        if len(self.l_move)==0:
-            return self.findmove(B,N,cur_x,cur_y)
-        else:
-            move=self.l_move.pop(0)
-            if(self.completed(B,N,cur_x,cur_y)):
-                self.l_move.clear()
-           
-            elif(self.blockage(B,N,cur_x,cur_y)):
-                self.l_move.clear()
-                return self.findmove(B,N,cur_x,cur_y)
-            return move
 
 
     def chk_corner(self, B, N, cur_x, cur_y):
-            if cur_x + 7 < N and cur_y + 7 < N:
+            if cur_x + 5 < N and cur_y + 5 < N:
                 available = True
-                for i in range(random.randint(0, 10)):
-                    for j in range(random.randint(0, 10)):
+                for i in range(5):
+                    for j in range(5):
                         if B[cur_x + i][cur_y + j] !=0 and i!=0 and j!=0:
                             available = False
 
                 if available :
-                    self.ex_box=[(cur_x + i, cur_y + j) for i in range(random.randint(0, 10)) for j in range(random.randint(0, 10))]
+                    self.ex_box=[(cur_x + i, cur_y + j) for i in range(5) for j in range(5)]
                     self.l_move.extend([(1,0),(1,0),(1,0),(1,0),(0,1),(0,1),(0,1),(0,1),(-1,0),(-1,0),(-1,0),(-1,0),(0,-1),(0,-1),(0,-1),(0,-1)])
                     return [True,self.l_move.pop(0)]
                 else:
@@ -64,15 +61,15 @@ class player:
 
 
     def chk_corner_again(self, B, N, cur_x, cur_y):
-        if cur_x - 7 >= 0 and cur_y + 7 < N:
+        if cur_x - 5 >= 0 and cur_y + 5 < N:
             available = True
-            for i in range(random.randint(0, 10)):
-                for j in range(random.randint(0, 10)):
+            for i in range(5):
+                for j in range(5):
                     if B[cur_x - i][cur_y + j] !=0 and i!=0 and j!=0:
                         available = False
 
             if available :
-                self.ex_box=[(cur_x - i, cur_y + j) for i in range(random.randint(0, 10)) for j in range(random.randint(0, 10))]
+                self.ex_box=[(cur_x - i, cur_y + j) for i in range(5) for j in range(5)]
                 self.l_move.extend([(-1,0),(-1,0),(-1,0),(-1,0),(0,1),(0,1),(0,1),(0,1),(1,0),(1,0),(1,0),(1,0),(0,-1),(0,-1),(0,-1),(0,-1)])
                 return [True,self.l_move.pop(0)]
             else:
@@ -81,15 +78,15 @@ class player:
                 return [False, (0,0)]
 
     def chk_corner_thrice(self, B, N, cur_x, cur_y):
-        if cur_x + 7 < N and cur_y - 7 >= 0:
+        if cur_x + 5 < N and cur_y - 5 >= 0:
             available = True
-            for i in range(random.randint(0, 10)):
-                for j in range(random.randint(0, 10)):
+            for i in range(5):
+                for j in range(5):
                     if B[cur_x + i][cur_y - j] !=0 and i!=0 and j!=0:
                         available = False
 
             if available :
-                self.ex_box=[(cur_x + i, cur_y - j) for i in range(random.randint(0, 10)) for j in range(random.randint(0, 10))]
+                self.ex_box=[(cur_x + i, cur_y - j) for i in range(5) for j in range(5)]
                 self.l_move.extend([(1,0),(1,0),(1,0),(1,0),(0,-1),(0,-1),(0,-1),(0,-1),(-1,0),(-1,0),(-1,0),(-1,0),(0,1),(0,1),(0,1),(0,1)])
                 return [True,self.l_move.pop(0)]
             else:
@@ -98,15 +95,15 @@ class player:
                 return [False, (0,0)]
 
     def chk_corner_lasttime(self, B, N, cur_x, cur_y):
-        if cur_x - 7>= 0 and cur_y - 7 >= 0:
+        if cur_x - 5>= 0 and cur_y - 5 >= 0:
             available = True
-            for i in range(random.randint(0, 10)):
-                for j in range(random.randint(0, 10)):
+            for i in range(5):
+                for j in range(5):
                     if B[cur_x - i][cur_y - j] !=0 and i!=0 and j!=0:
                         available = False
 
             if available :
-                self.ex_box=[(cur_x - i, cur_y - j) for i in range(random.randint(0, 10)) for j in range(random.randint(0, 10))]
+                self.ex_box=[(cur_x - i, cur_y - j) for i in range(5) for j in range(5)]
                 self.l_move.extend([(-1,0),(-1,0),(-1,0),(-1,0),(0,-1),(0,-1),(0,-1),(0,-1),(1,0),(1,0),(1,0),(1,0),(0,1),(0,1),(0,1),(0,1)])
                 return [True,self.l_move.pop(0)]
             else:
