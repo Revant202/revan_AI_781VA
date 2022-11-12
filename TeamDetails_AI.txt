@@ -1,0 +1,10 @@
+Team Name: Bit Lords
+
+Team Member 1: (Assumed to be the team lead, by default)
+Name: Emany Sri Revant (201000042)
+Email ID: revant202@gmail.com
+
+
+Team Member 2:
+Name: Ritesh Kumar Verma (201000043)
+Email ID: ritesh20100@iiitnr.edu.in 
